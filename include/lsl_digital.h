@@ -5,6 +5,9 @@
 
 enum DIGITAL_STATE {LOW, HIGH, TOGGLE};
 
+/* Init */
+void LSL_DIGITAL_Init(LSL_Pinout *pinout);
+
 /* Input */
 uint8_t LSL_DIGITAL_Read(LSL_Pinout *pinout);
 

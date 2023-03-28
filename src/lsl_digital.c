@@ -1,5 +1,14 @@
 #include "lsl_digital.h"
 
+/* Init */
+void LSL_DIGITAL_Init(LSL_Pinout *pinout) {
+
+    for (unsigned int i=0; i < (sizeof(*pinout)/sizeof(pinout[0])); i++) { // For each Pinout from the array
+        
+        LSL_PINOUTS_InitPinout(&pinout[i]); // Set GPIO RCC & Mode
+    }
+}
+
 /* Input */
 uint8_t LSL_DIGITAL_Read(LSL_Pinout *pinout) {
     return (pinout->PORTx->IDR & (1 << pinout->pin));   // Read a digital input

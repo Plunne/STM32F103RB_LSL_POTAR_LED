@@ -15,7 +15,7 @@ void LSL_Init_RCC(void) {
 
 void LSL_Init_GPIO(void) {
     
-	LSL_IO_InitGPIO(&LED);
-	LSL_IO_InitGPIO(&POTAR);
+	LSL_DIGITAL_Init(*DIGITAL_Handler);
+	LSL_ANALOG_ADC_Init(&ANALOG_ADC_Handler);
 
 }

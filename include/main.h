@@ -1,9 +1,25 @@
 #ifndef __MAIN_H
 #define __MAIN_H
 
-#include "lsl_pinouts.h"
+#include "lsl_io.h"
 
+static LSL_Pinout EMPTY_ADC = { GPIOA, 2, ADC_MODE };
 static LSL_Pinout POTAR = { GPIOA, 7, ADC_MODE };
 static LSL_Pinout LED = { GPIOA, 5, OUTPUT_MODE };
+
+/* DIGITAL */
+static LSL_Pinout *DIGITAL_Handler[] = {
+    &LED
+};
+
+/* ANALOG */
+static LSL_ANALOG_ADC_Handler ANALOG_ADC_Handler = {
+    .adc        = ADC1,
+    .nbChannels = 2,
+    .adc_pinout = {
+        &POTAR,
+        &EMPTY_ADC
+    }
+};
 
 #endif // __MAIN_H

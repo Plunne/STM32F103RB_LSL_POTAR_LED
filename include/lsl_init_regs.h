@@ -1,7 +1,6 @@
 #ifndef __LSL_INIT_REGS_H
 #define __LSL_INIT_REGS_H
 
-#include "lsl_io.h"
 #include "main.h"
 
 /* Init All */
