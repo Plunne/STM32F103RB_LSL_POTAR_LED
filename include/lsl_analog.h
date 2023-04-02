@@ -19,7 +19,7 @@ void LSL_ANALOG_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler);
 
 /* Setup */
 void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC);
-void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t *data);
+void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data);
 
 /* Enable */
 void LSL_ANALOG_ADC_Enable(ADC_TypeDef* ADC);

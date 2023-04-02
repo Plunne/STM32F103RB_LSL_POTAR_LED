@@ -8,7 +8,7 @@ void LSL_ANALOG_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 	LSL_ANALOG_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
 	LSL_ANALOG_ADC_MultipleSequences(ADC_Handler);
 	LSL_ANALOG_ADC_Enable(ADC_Handler->adc);
-	LSL_ANALOG_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t *)ADC_Handler->adc_channel);
+	LSL_ANALOG_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t)ADC_Handler->adc_channel);
 }
 
 void LSL_ANALOG_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler) {
@@ -36,6 +36,12 @@ void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC) {
 	// Enable continuous conversion
 	ADC->CR2 |= ADC_CR2_CONT;
 
+	// Data Alignment
+	ADC->CR2 &= ~ADC_CR2_ALIGN;
+	
+	// Sample time
+	ADC->SMPR2 &= ~((0b111 << ADC_SMPR2_SMP6_Pos) | (0b111 << ADC_SMPR2_SMP7_Pos));
+
 	// External selector
 	ADC->CR2 |= (0b111 << ADC_CR2_EXTSEL_Pos);	// Set SWSTART control
 	ADC->CR2 |= ADC_CR2_EXTTRIG;				// Let DMA running ADC conversions
@@ -55,7 +61,7 @@ void LSL_ANALOG_ADC_EnableDMA(ADC_TypeDef* ADC) {
 	ADC->CR2 |= ADC_CR2_DMA;
 }
 
-void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t *data) {
+void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data) {
 
 	DMA_Channel_TypeDef *DMA;
 
@@ -81,7 +87,7 @@ void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t *dat
 	// DMA Addresses
 	DMA->CNDTR = data_size; // Captured value size (12bits -> 16bits)
 	DMA->CPAR = (uint32_t)&ADC->DR;	// ADC Data register address
-	DMA->CMAR = (uint32_t)data;		// Data address to DMA Data Register
+	DMA->CMAR = data;		// Data address to DMA Data Register
 
 	// Start DMA
 	DMA->CCR |= DMA_CCR_EN; 		// Enable DMA
