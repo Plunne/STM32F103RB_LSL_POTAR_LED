@@ -13,17 +13,30 @@ typedef struct {
 
 } LSL_ANALOG_ADC_Handler;
 
-/* Input */
+/* Init */
 void LSL_ANALOG_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler);
-void LSL_ANALOG_ADC_Start(ADC_TypeDef* ADC);
-void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data);
-void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv);
-void LSL_ANALOG_ADC_SetSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel);
-void LSL_ANALOG_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler);
-void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC);
-uint16_t LSL_ANALOG_ADC_Read(ADC_TypeDef* ADC);
+void LSL_ANALOG_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler);
 
-/* Output */
-void LSL_ANALOG_Write(LSL_Pinout *pinout);
+/* Setup */
+void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC);
+void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t *data);
+
+/* Enable */
+void LSL_ANALOG_ADC_Enable(ADC_TypeDef* ADC);
+void LSL_ANALOG_ADC_EnableDMA(ADC_TypeDef* ADC);
+
+/* Covnersions */
+void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv);
+
+/* Sequences */
+void LSL_ANALOG_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel);
+void LSL_ANALOG_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler);
+
+/* Calibration */
+void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC);
+
+/* Read */
+uint16_t LSL_ANALOG_ADC_Read(LSL_ANALOG_ADC_Handler* ADC_Handler, LSL_Pinout* pinout);
+uint16_t LSL_ANALOG_ADC_ReadSingle(ADC_TypeDef* ADC);
 
 #endif // __LSL_DIGITAL_H

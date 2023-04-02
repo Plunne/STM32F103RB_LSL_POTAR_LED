@@ -8,17 +8,25 @@ int main(void) {
 	LSL_Init_Registers();
 
 	/* Init Variables */
-	uint16_t adc_value = 0;
+	// uint16_t adc_value = 0;
 
 	/* Super Loop */
 	while (1) {
 
-		adc_value = LSL_ANALOG_ADC_Read(ADC1); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
-		LSL_ANALOG_ADC_Read(ADC1); // Get blank ADC Data because we have set an empty ADC input as first sequence (increment to next ADC conv)
+		LSL_DIGITAL_Write(&LED, HIGH);		
+		LSL_UTILS_DelayMs(LSL_ANALOG_ADC_Read(&ANALOG_ADC_Handler, &POTAR));
+		LSL_DIGITAL_Write(&LED, LOW);		
+		LSL_UTILS_DelayMs(LSL_ANALOG_ADC_Read(&ANALOG_ADC_Handler, &POTAR2));
+
+
+		/*
+		adc_value = LSL_ANALOG_ADC_ReadSingle(ADC1); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
+		LSL_ANALOG_ADC_ReadSingle(ADC1); // Get blank ADC Data because we have set an empty ADC input as first sequence (increment to next ADC conv)
 		
 		// Delay
 		LSL_DIGITAL_Write(&LED, TOGGLE);
 		LSL_UTILS_DelayMs(adc_value); 					// Delay (Be careful sw_cpt value depends of this delay)
+		*/
 	}
 	
 	return 0;

@@ -3,16 +3,24 @@
 /* Init */
 void LSL_ANALOG_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 
-	uint16_t data = 0;
-	LSL_ANALOG_ADC_Start(ADC_Handler->adc);
-	LSL_ANALOG_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, data);
+	LSL_ANALOG_ADC_Setup(ADC_Handler->adc);
+	LSL_ANALOG_ADC_EnableDMA(ADC_Handler->adc);
 	LSL_ANALOG_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
 	LSL_ANALOG_ADC_MultipleSequences(ADC_Handler);
+	LSL_ANALOG_ADC_Enable(ADC_Handler->adc);
+	LSL_ANALOG_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t *)ADC_Handler->adc_channel);
+}
+
+void LSL_ANALOG_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+
+	LSL_ANALOG_ADC_Setup(ADC_Handler->adc);
+	LSL_ANALOG_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
+	LSL_ANALOG_ADC_SingleSequence(ADC_Handler->adc, 1, ADC_Handler->adc_pinout[0]->pin);
 	LSL_ANALOG_ADC_Calibrate(ADC_Handler->adc);
 }
 
-/* Input */
-void LSL_ANALOG_ADC_Start(ADC_TypeDef* ADC) {
+/* Setup */
+void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC) {
 
 	// Enable ADC
 	if (ADC == ADC1) RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; // Enable ADC1
@@ -26,14 +34,28 @@ void LSL_ANALOG_ADC_Start(ADC_TypeDef* ADC) {
 	ADC->CR1 |= ADC_CR1_SCAN;
 	
 	// Enable continuous conversion
-	//ADC->CR2 |= ADC_CR2_CONT;
+	ADC->CR2 |= ADC_CR2_CONT;
 
-	// Run ADC (ADON)
-	ADC->CR2 |= ADC_CR2_ADON;
+	// External selector
+	ADC->CR2 |= (0b111 << ADC_CR2_EXTSEL_Pos);	// Set SWSTART control
+	ADC->CR2 |= ADC_CR2_EXTTRIG;				// Let DMA running ADC conversions
 
 }
 
-void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data) {
+/* Enable */
+void LSL_ANALOG_ADC_Enable(ADC_TypeDef* ADC) {
+
+	// Run ADC (ADON)
+	ADC->CR2 |= ADC_CR2_ADON;
+}
+
+void LSL_ANALOG_ADC_EnableDMA(ADC_TypeDef* ADC) {
+
+	// Enable DMA
+	ADC->CR2 |= ADC_CR2_DMA;
+}
+
+void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t *data) {
 
 	DMA_Channel_TypeDef *DMA;
 
@@ -44,28 +66,32 @@ void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data
 	else return;
 
 	// Enable DMA for ADC
-	ADC->CR2 |= ADC_CR2_DMA;
+	
+	// DMA Settings
+	DMA->CCR &= ~DMA_CCR_DIR; 	// Set Peripheral read value to Memory
+	DMA->CCR |= DMA_CCR_CIRC; 	// Enable Circular mode for ADC
+	DMA->CCR |= DMA_CCR_MINC; 	// Enable Memory Increment to stack data in successive registers
 
 	// Data registers sizes
 	// 00 = 8b / 01 = 16b / 10 = 32b / 11 = reserved
-	DMA->CCR |= (0b01 << DMA_CCR_MSIZE_Pos); // Set Data Memory Acces size (12bits -> 16bits)
 	DMA->CCR |= (0b01 << DMA_CCR_PSIZE_Pos); // Set Peripheral ADC Data Register value size (12bits -> 16bits)
-	
-	// DMA Settings
-	DMA->CCR |= DMA_CCR_MINC; 	// Enable Memory Increment to stack data in successive registers
-	DMA->CCR |= DMA_CCR_CIRC; 	// Enable Circular mode for ADC
-	DMA->CCR |= DMA_CCR_DIR; 	// Set Peripheral read value to Memory
+	DMA->CCR |= (0b01 << DMA_CCR_MSIZE_Pos); // Set Data Memory Acces size (12bits -> 16bits)
 
+	
 	// DMA Addresses
 	DMA->CNDTR = data_size; // Captured value size (12bits -> 16bits)
-	DMA->CPAR = &ADC->DR;	// ADC Data register address
-	DMA->CMAR = data;		// Data address to DMA Data Register
+	DMA->CPAR = (uint32_t)&ADC->DR;	// ADC Data register address
+	DMA->CMAR = (uint32_t)data;		// Data address to DMA Data Register
 
 	// Start DMA
-	DMA->CCR |= DMA_CCR_EN; // Enable DMA
+	DMA->CCR |= DMA_CCR_EN; 		// Enable DMA
+
+	// External Trigger for ADC
+	ADC->CR2 |= ADC_CR2_SWSTART;  				// Start regular conversion by software
 
 }
 
+/* Conversions */
 void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv) {
 		
 	// If there is a number of conversion
@@ -79,7 +105,8 @@ void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv) {
 	}
 }
 
-void LSL_ANALOG_ADC_SetSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel) {
+/* Sequences */
+void LSL_ANALOG_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel) {
 
 	// Set conversion
 	if ((sequence > 0) && (sequence <= 6)) {
@@ -99,10 +126,11 @@ void LSL_ANALOG_ADC_SetSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t chan
 void LSL_ANALOG_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 	for (int i=0; i < ADC_Handler->nbChannels; i++) {
 		LSL_PINOUTS_InitPinout(ADC_Handler->adc_pinout[i]);
-		LSL_ANALOG_ADC_SetSequence(ADC_Handler->adc, i + 1, ADC_Handler->adc_pinout[i]->pin);
+		LSL_ANALOG_ADC_SingleSequence(ADC_Handler->adc, i + 1, ADC_Handler->adc_pinout[i]->pin);
 	}
 }
 
+/* Calibration */
 void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC) {
 
 	// Calibrate ADC
@@ -110,7 +138,15 @@ void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC) {
 	while(ADC->CR2 & ADC_CR2_CAL); // Waiting for calibration
 }
 
-uint16_t LSL_ANALOG_ADC_Read(ADC_TypeDef* ADC) {
+/* Read */
+uint16_t LSL_ANALOG_ADC_Read(LSL_ANALOG_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
+	for (uint8_t i=0; i < NB_ADC_CHANNELS; i++) {
+		if (pinout == ADC_Handler->adc_pinout[i]) return ADC_Handler->adc_channel[i];
+	}
+	return 0;
+}
+
+uint16_t LSL_ANALOG_ADC_ReadSingle(ADC_TypeDef* ADC) {
 
 		// ADC1 Capture
 		ADC->CR2 |= ADC_CR2_ADON;			// Launch ADC capture
@@ -119,9 +155,4 @@ uint16_t LSL_ANALOG_ADC_Read(ADC_TypeDef* ADC) {
 
 		// ADC1 Data
 		return (uint16_t)(ADC->DR & ~(0xF << 12)); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
-}
-
-/* Output */
-void LSL_ANALOG_Write(LSL_Pinout *pinout) {
-
 }
