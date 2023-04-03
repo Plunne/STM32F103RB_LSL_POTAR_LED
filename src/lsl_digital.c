@@ -3,8 +3,7 @@
 /* Init */
 void LSL_DIGITAL_Init(LSL_Pinout *pinout) {
 
-    for (unsigned int i=0; i < (sizeof(*pinout)/sizeof(pinout[0])); i++) { // For each Pinout from the array
-        
+    for (unsigned int i=0; i < sizeof(*pinout); i++) { // For each Pinout from the array
         LSL_PINOUTS_InitPinout(&pinout[i]); // Set GPIO RCC & Mode
     }
 }

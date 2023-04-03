@@ -3,7 +3,7 @@
 
 #include "lsl_io.h"
 
-#define DIODE_NB    7
+#define DIODE_NB    8
 
 enum DiodeCOM { anode, cathode };
 

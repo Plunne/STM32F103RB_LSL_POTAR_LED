@@ -5,17 +5,18 @@ uint8_t LSL_DISPLAY_Get7Seg(uint8_t number) {
 
     switch(number)
     {
-        case 0: return 0b0111111;
-        case 1: return 0b0000110;
-        case 2: return 0b1011011;
-        case 3: return 0b1001111;
-        case 4: return 0b1100110;
-        case 5: return 0b1101101;
-        case 6: return 0b1111101;
-        case 7: return 0b0000111;
-        case 8: return 0b1111111;
-        case 9: return 0b1101111;
-        default: return 0b1000000;
+        case 0: return 0b00111111;
+        case 1: return 0b00000110;
+        case 2: return 0b01011011;
+        case 3: return 0b01001111;
+        case 4: return 0b01100110;
+        case 5: return 0b01101101;
+        case 6: return 0b01111101;
+        case 7: return 0b00000111;
+        case 8: return 0b01111111;
+        case 9: return 0b01101111;
+        case 10: return 0b10000000;
+        default: return 0b01000000;
     }
 }
 
