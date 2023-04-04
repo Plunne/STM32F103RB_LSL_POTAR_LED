@@ -1,27 +1,27 @@
-#include "lsl_analog.h"
+#include "lsl_adc.h"
 
 /* Init */
-void LSL_ANALOG_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 
-	LSL_ANALOG_ADC_Setup(ADC_Handler->adc);
-	LSL_ANALOG_ADC_EnableDMA(ADC_Handler->adc);
-	LSL_ANALOG_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
-	LSL_ANALOG_ADC_MultipleSequences(ADC_Handler);
-	LSL_ANALOG_ADC_Enable(ADC_Handler->adc);
-	LSL_ANALOG_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t)ADC_Handler->adc_channel);
+	LSL_ADC_Setup(ADC_Handler->adc);
+	LSL_ADC_EnableDMA(ADC_Handler->adc);
+	LSL_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
+	LSL_ADC_MultipleSequences(ADC_Handler);
+	LSL_ADC_Enable(ADC_Handler->adc);
+	LSL_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t)ADC_Handler->adc_channel);
 }
 
-void LSL_ANALOG_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 
-	LSL_ANALOG_ADC_Setup(ADC_Handler->adc);
-	LSL_ANALOG_ADC_Enable(ADC_Handler->adc);
-	LSL_ANALOG_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
-	LSL_ANALOG_ADC_SingleSequence(ADC_Handler->adc, 1, ADC_Handler->adc_pinout[0]->pin);
-	LSL_ANALOG_ADC_Calibrate(ADC_Handler->adc);
+	LSL_ADC_Setup(ADC_Handler->adc);
+	LSL_ADC_Enable(ADC_Handler->adc);
+	LSL_ADC_SetConvNumber(ADC_Handler->adc, ADC_Handler->nbChannels);
+	LSL_ADC_SingleSequence(ADC_Handler->adc, 1, ADC_Handler->adc_pinout[0]->pin);
+	LSL_ADC_Calibrate(ADC_Handler->adc);
 }
 
 /* Setup */
-void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC) {
+void LSL_ADC_Setup(ADC_TypeDef* ADC) {
 
 	// Enable ADC
 	if (ADC == ADC1) RCC->APB2ENR |= RCC_APB2ENR_ADC1EN; // Enable ADC1
@@ -43,14 +43,14 @@ void LSL_ANALOG_ADC_Setup(ADC_TypeDef* ADC) {
 }
 
 /* Enable */
-void LSL_ANALOG_ADC_Enable(ADC_TypeDef* ADC) {
+void LSL_ADC_Enable(ADC_TypeDef* ADC) {
 
 	// Run ADC (ADON)
 	ADC->CR2 |= ADC_CR2_ADON;
 	LSL_UTILS_DelayMs(100);
 }
 
-void LSL_ANALOG_ADC_EnableDMA(ADC_TypeDef* ADC) {
+void LSL_ADC_EnableDMA(ADC_TypeDef* ADC) {
 
 	// Enable DMA
 	ADC->CR2 |= ADC_CR2_DMA;
@@ -61,7 +61,7 @@ void LSL_ANALOG_ADC_EnableDMA(ADC_TypeDef* ADC) {
 
 }
 
-void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data) {
+void LSL_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data) {
 
 	DMA_Channel_TypeDef *DMA;
 
@@ -99,7 +99,7 @@ void LSL_ANALOG_ADC_SetupDMA(ADC_TypeDef* ADC, uint16_t data_size, uint32_t data
 }
 
 /* Conversions */
-void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv) {
+void LSL_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv) {
 		
 	// If there is a number of conversion
 	if (nbConv && (nbConv <= 16)) { 
@@ -113,7 +113,7 @@ void LSL_ANALOG_ADC_SetConvNumber(ADC_TypeDef* ADC, uint8_t nbConv) {
 }
 
 /* Sequences */
-void LSL_ANALOG_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel) {
+void LSL_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel) {
 
 	// Set conversion
 	if ((sequence > 0) && (sequence <= 6)) {
@@ -130,15 +130,15 @@ void LSL_ANALOG_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t c
 	}
 }
 
-void LSL_ANALOG_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 	for (int i=0; i < ADC_Handler->nbChannels; i++) {
 		LSL_PINOUTS_InitPinout(ADC_Handler->adc_pinout[i]);
-		LSL_ANALOG_ADC_SingleSequence(ADC_Handler->adc, i + 1, ADC_Handler->adc_pinout[i]->pin);
+		LSL_ADC_SingleSequence(ADC_Handler->adc, i + 1, ADC_Handler->adc_pinout[i]->pin);
 	}
 }
 
 /* Calibration */
-void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC) {
+void LSL_ADC_Calibrate(ADC_TypeDef* ADC) {
 
 	// Calibrate ADC
 	ADC->CR2 |= ADC_CR2_CAL; // Calibrate ADC
@@ -146,14 +146,14 @@ void LSL_ANALOG_ADC_Calibrate(ADC_TypeDef* ADC) {
 }
 
 /* Read */
-uint16_t LSL_ANALOG_ADC_Read(LSL_ANALOG_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
+uint16_t LSL_ADC_Read(LSL_ANALOG_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
 	for (uint8_t i=0; i < NB_ADC_CHANNELS; i++) {
 		if (pinout == ADC_Handler->adc_pinout[i]) return ADC_Handler->adc_channel[i];
 	}
 	return 0;
 }
 
-uint16_t LSL_ANALOG_ADC_ReadSingle(ADC_TypeDef* ADC) {
+uint16_t LSL_ADC_ReadSingle(ADC_TypeDef* ADC) {
 
 		// ADC1 Capture
 		ADC->CR2 |= ADC_CR2_ADON;			// Launch ADC capture
@@ -165,15 +165,15 @@ uint16_t LSL_ANALOG_ADC_ReadSingle(ADC_TypeDef* ADC) {
 }
 
 uint16_t LSL_ADC_ReadSingleMax(ADC_TypeDef* ADC, uint8_t max) {
-	if (max) return (LSL_ANALOG_ADC_ReadSingle(ADC) / (4092 / max));
+	if (max) return (LSL_ADC_ReadSingle(ADC) / (4092 / max));
 	return 0;
 }
 
 
 uint16_t LSL_ADC_ReadSingleRange(ADC_TypeDef* ADC, uint16_t min, uint16_t max) {
-	if (!(min && max)) {
+	if (max) {
 		if((min < 0xffe) && (max < 0xfff)) {
-			return min + (LSL_ANALOG_ADC_ReadSingle(ADC) / (1023 / (max - min)));
+			return (min + (LSL_ADC_ReadSingle(ADC) / (4092 / (max - min))));
 		}
 	}
 	return 0;

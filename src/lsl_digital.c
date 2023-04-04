@@ -1,10 +1,10 @@
 #include "lsl_digital.h"
 
 /* Init */
-void LSL_DIGITAL_Init(LSL_Pinout *pinout) {
+void LSL_DIGITAL_Init(LSL_Pinout **pinout, uint8_t qty) {
 
-    for (unsigned int i=0; i < sizeof(*pinout); i++) { // For each Pinout from the array
-        LSL_PINOUTS_InitPinout(&pinout[i]); // Set GPIO RCC & Mode
+    for (uint8_t i=0; i < qty ; i++) { // For each Pinout from the array
+        LSL_PINOUTS_InitPinout(pinout[i]); // Set GPIO RCC & Mode
     }
 }
 

@@ -1,5 +1,5 @@
-#ifndef __LSL_INIT_REGS_H
-#define __LSL_INIT_REGS_H
+#ifndef __LSL_INIT_H
+#define __LSL_INIT_H
 
 #include "main.h"
 
