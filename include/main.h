@@ -2,7 +2,14 @@
 #define __MAIN_H
 
 #include "lsl_io.h"
+#include "lsl_timer.h"
 #include "lsl_display.h"
+
+/*******************
+ *     GLOBALS     *
+ *******************/
+
+static int counter = 0;
 
 /*******************
  *     DIGITAL     *

@@ -1,6 +1,8 @@
 #include "lsl_init.h"
 #include "lsl_utils.h"
 
+void TIM2_IRQHandler(void);
+
 int main(void) {
 
 	/* Init Registers */
@@ -28,4 +30,16 @@ int main(void) {
 	}
 	
 	return 0;
+}
+
+/**********************
+ *     Interrupts     *
+ **********************/
+
+void TIM2_IRQHandler(void){
+	if (TIM2->SR & 1){
+		TIM2->SR &= ~1;
+		//do the logic
+		counter = ((1 + counter) % 9);
+	}
 }

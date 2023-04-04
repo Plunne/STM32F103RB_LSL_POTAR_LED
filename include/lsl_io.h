@@ -4,5 +4,4 @@
 #include "lsl_adc.h"
 #include "lsl_digital.h"
 
-
 #endif // __LSL_IO_H
