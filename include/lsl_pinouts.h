@@ -1,5 +1,5 @@
-#ifndef __LSL_PINOUTS_H
-#define __LSL_PINOUTS_H
+#ifndef LSL_PINOUTS_H
+#define LSL_PINOUTS_H
 
 #include "stm32f103xb.h"
 
@@ -24,4 +24,4 @@ void LSL_PINOUTS_ClearMode(GPIO_TypeDef *PORTx, uint8_t pin);
 void LSL_PINOUTS_SetPinout(GPIO_TypeDef *PORTx, uint8_t pin, uint8_t mode);
 void LSL_PINOUTS_InitPinout(LSL_Pinout *pinout);
 
-#endif // __LSL_PINOUTS_H
+#endif // LSL_PINOUTS_H

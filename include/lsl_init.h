@@ -1,5 +1,5 @@
-#ifndef __LSL_INIT_H
-#define __LSL_INIT_H
+#ifndef LSL_INIT_H
+#define LSL_INIT_H
 
 #include "main.h"
 
@@ -11,4 +11,4 @@ void LSL_Init_RCC(void);
 void LSL_Init_GPIO(void);
 void LSL_Init_TIMERS(void);
 
-#endif // __LSL_INIT_REGS_H
+#endif // LSL_INIT_REGS_H

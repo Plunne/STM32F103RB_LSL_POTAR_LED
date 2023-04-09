@@ -1,7 +1,7 @@
 #include "lsl_adc.h"
 
 /* Init */
-void LSL_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_Init(LSL_ADC_Handler* ADC_Handler) {
 
 	LSL_ADC_Setup(ADC_Handler->adc);
 	LSL_ADC_EnableDMA(ADC_Handler->adc);
@@ -11,7 +11,7 @@ void LSL_ADC_Init(LSL_ANALOG_ADC_Handler* ADC_Handler) {
 	LSL_ADC_SetupDMA(ADC_Handler->adc, ADC_Handler->nbChannels, (uint32_t)ADC_Handler->adc_channel);
 }
 
-void LSL_ADC_InitSingle(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_InitSingle(LSL_ADC_Handler* ADC_Handler) {
 
 	LSL_ADC_Setup(ADC_Handler->adc);
 	LSL_ADC_Enable(ADC_Handler->adc);
@@ -130,7 +130,7 @@ void LSL_ADC_SingleSequence(ADC_TypeDef* ADC, uint8_t sequence, uint8_t channel)
 	}
 }
 
-void LSL_ADC_MultipleSequences(LSL_ANALOG_ADC_Handler* ADC_Handler) {
+void LSL_ADC_MultipleSequences(LSL_ADC_Handler* ADC_Handler) {
 	for (int i=0; i < ADC_Handler->nbChannels; i++) {
 		LSL_PINOUTS_InitPinout(ADC_Handler->adc_pinout[i]);
 		LSL_ADC_SingleSequence(ADC_Handler->adc, i + 1, ADC_Handler->adc_pinout[i]->pin);
@@ -146,7 +146,7 @@ void LSL_ADC_Calibrate(ADC_TypeDef* ADC) {
 }
 
 /* Read */
-uint16_t LSL_ADC_Read(LSL_ANALOG_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
+uint16_t LSL_ADC_Read(LSL_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
 	for (uint8_t i=0; i < NB_ADC_CHANNELS; i++) {
 		if (pinout == ADC_Handler->adc_pinout[i]) return ADC_Handler->adc_channel[i];
 	}

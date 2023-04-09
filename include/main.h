@@ -1,5 +1,5 @@
-#ifndef __MAIN_H
-#define __MAIN_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include "lsl_io.h"
 #include "lsl_timer.h"
@@ -20,14 +20,14 @@ static LSL_Pinout LED = { GPIOA, 5, OUTPUT_MODE };
 
 // DISPLAY
 static LSL_Pinout Display[DIODE_NB] = {
-    { GPIOB, 12, OUTPUT_MODE},
-    { GPIOB, 11, OUTPUT_MODE},
-    { GPIOB, 14, OUTPUT_MODE},
-    { GPIOB, 15, OUTPUT_MODE},
-    { GPIOB, 1,  OUTPUT_MODE},
-    { GPIOA, 11, OUTPUT_MODE},
-    { GPIOA, 12, OUTPUT_MODE},
-    { GPIOB, 13, OUTPUT_MODE}
+    { GPIOB, 12, OUTPUT_MODE },
+    { GPIOB, 11, OUTPUT_MODE },
+    { GPIOB, 14, OUTPUT_MODE },
+    { GPIOB, 15, OUTPUT_MODE },
+    { GPIOB, 1,  OUTPUT_MODE },
+    { GPIOA, 11, OUTPUT_MODE },
+    { GPIOA, 12, OUTPUT_MODE },
+    { GPIOB, 13, OUTPUT_MODE }
 };
 
 /* Digital IO quantity */
@@ -55,7 +55,7 @@ static LSL_Pinout POTAR = { GPIOA, 7, ADC_MODE };
 // static LSL_Pinout POTAR2 = { GPIOA, 6, ADC_MODE };
 
 /* Analog Handler */
-static LSL_ANALOG_ADC_Handler LSL_IO_Adc = {
+static LSL_ADC_Handler LSL_IO_Adc = {
     .adc        = ADC1,
     .nbChannels = 1,
     .adc_pinout = {
@@ -64,4 +64,4 @@ static LSL_ANALOG_ADC_Handler LSL_IO_Adc = {
     }
 };
 
-#endif // __MAIN_H
+#endif // MAIN_H

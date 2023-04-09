@@ -1,7 +1,7 @@
-#ifndef __LSL_IO_H
-#define __LSL_IO_H
+#ifndef LSL_IO_H
+#define LSL_IO_H
 
 #include "lsl_adc.h"
 #include "lsl_digital.h"
 
-#endif // __LSL_IO_H
+#endif // LSL_IO_H
