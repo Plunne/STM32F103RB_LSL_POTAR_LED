@@ -5,6 +5,7 @@
         "stm32f103xb.h": "c",
         "lsl_display.h": "c",
         "lsl_io.h": "c",
-        "lsl_adc.h": "c"
+        "lsl_adc.h": "c",
+        "lsl_init.h": "c"
     }
 }

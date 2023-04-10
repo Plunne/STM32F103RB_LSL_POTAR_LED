@@ -1,8 +1,13 @@
 #include "lsl_init.h"
 #include "lsl_utils.h"
 
+/* Globals */
+int counter = 0;
+
+/* Interrupts */
 void TIM2_IRQHandler(void);
 
+/* Main */
 int main(void) {
 
 	/* Init Registers */

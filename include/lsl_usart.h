@@ -1,7 +1,17 @@
 #ifndef LSL_USART_H
 #define LSL_USART_H
 
-#include "stm32f103xb.h"
+#include "lsl_pinouts.h"
+
+typedef struct {
+    USART_TypeDef *usart;
+    uint32_t bauds;
+    uint8_t dataSize;
+    uint8_t parity;
+    uint8_t stop;
+    LSL_Pinout *usart_pinout[2];
+
+} LSL_USART_Handler;
 
 // Table used for USART1
 // MCU freq = 72MHz
@@ -28,7 +38,8 @@ static uint16_t LSL_USART36_BAUD [5][2] = {
 };
 
 /* Init */
-void LSL_USART_Init(USART_TypeDef* USART, uint32_t baudrate, uint8_t data_size, uint8_t parity, uint8_t stop);
+void LSL_USART_Init(LSL_USART_Handler* USART_Handler);
+void LSL_USART_Setup(USART_TypeDef* USART, uint32_t baudrate, uint8_t data_size, uint8_t parity, uint8_t stop);
 
 /* Baudrate */
 void LSL_USART_Baudrate(USART_TypeDef* USART, uint32_t baudrate);

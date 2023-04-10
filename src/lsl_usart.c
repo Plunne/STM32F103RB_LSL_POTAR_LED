@@ -1,7 +1,12 @@
 #include "lsl_usart.h"
 
 /* Init */
-void LSL_USART_Init(USART_TypeDef* USART, uint32_t baudrate, uint8_t data_size, uint8_t parity, uint8_t stop) {
+void LSL_USART_Init(LSL_USART_Handler* USART_Handler) {
+
+	//LSL_USART_Setup(USART_Handler->usart, );
+}
+
+void LSL_USART_Setup(USART_TypeDef* USART, uint32_t baudrate, uint8_t data_size, uint8_t parity, uint8_t stop) {
 
 	/* Enable USART Clock */
 	if (USART == USART1) RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 		// Enable clock USART1

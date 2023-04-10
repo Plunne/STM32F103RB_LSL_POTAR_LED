@@ -1,7 +1,7 @@
 #ifndef LSL_DISPLAY_H
 #define LSL_DISPLAY_H
 
-#include "lsl_io.h"
+#include "lsl_digital.h"
 
 #define DIODE_NB    8
 
