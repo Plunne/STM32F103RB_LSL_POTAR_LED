@@ -38,8 +38,8 @@ void LSL_ADC_Calibrate(ADC_TypeDef* ADC);
 
 /* Read */
 uint16_t LSL_ADC_Read(LSL_ADC_Handler* ADC_Handler, LSL_Pinout* pinout);
-uint16_t LSL_ADC_ReadSingle(ADC_TypeDef* ADC);
-uint16_t LSL_ADC_ReadSingleMax(ADC_TypeDef* ADC, uint8_t max);
-uint16_t LSL_ADC_ReadSingleRange(ADC_TypeDef* ADC, uint16_t min, uint16_t max);
+uint16_t LSL_ADC_ReadSingle(LSL_ADC_Handler* ADC_Handler);
+uint16_t LSL_ADC_ReadSingleMax(LSL_ADC_Handler* ADC_Handler, uint8_t max);
+uint16_t LSL_ADC_ReadSingleRange(LSL_ADC_Handler* ADC_Handler, uint16_t min, uint16_t max);
 
 #endif // LSL_ADC_H

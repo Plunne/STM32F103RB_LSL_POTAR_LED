@@ -19,7 +19,7 @@ int main(void) {
 	/* Super Loop */
 	while (1) {
 
-		adc_value = LSL_ADC_ReadSingleRange(LSL_IO_Adc.adc, 2, 7); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
+		adc_value = LSL_ADC_ReadSingleRange(&LSL_INIT_ADC1, 2, 7); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
 		
 		// Delay
 		LSL_DISPLAY_Display7Seg(Display, adc_value, anode);

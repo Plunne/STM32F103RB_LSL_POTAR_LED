@@ -153,27 +153,27 @@ uint16_t LSL_ADC_Read(LSL_ADC_Handler* ADC_Handler, LSL_Pinout* pinout) {
 	return 0;
 }
 
-uint16_t LSL_ADC_ReadSingle(ADC_TypeDef* ADC) {
+uint16_t LSL_ADC_ReadSingle(LSL_ADC_Handler* ADC_Handler) {
 
 		// ADC1 Capture
-		ADC->CR2 |= ADC_CR2_ADON;			// Launch ADC capture
-		while(!(ADC->SR & ADC_SR_EOC));	// Waiting for capture
-		ADC->SR &= ~ADC_SR_EOC;			// Reset end of conversion flag
+		ADC_Handler->adc->CR2 |= ADC_CR2_ADON;		// Launch ADC capture
+		while(!(ADC_Handler->adc->SR & ADC_SR_EOC));	// Waiting for capture
+		ADC_Handler->adc->SR &= ~ADC_SR_EOC;			// Reset end of conversion flag
 
 		// ADC1 Data
-		return (uint16_t)(ADC->DR & ~(0xF << 12)); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
+		return (uint16_t)(ADC_Handler->adc->DR & ~(0xF << 12)); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
 }
 
-uint16_t LSL_ADC_ReadSingleMax(ADC_TypeDef* ADC, uint8_t max) {
-	if (max) return (LSL_ADC_ReadSingle(ADC) / (4092 / max));
+uint16_t LSL_ADC_ReadSingleMax(LSL_ADC_Handler* ADC_Handler, uint8_t max) {
+	if (max) return (LSL_ADC_ReadSingle(ADC_Handler->adc) / (4092 / max));
 	return 0;
 }
 
 
-uint16_t LSL_ADC_ReadSingleRange(ADC_TypeDef* ADC, uint16_t min, uint16_t max) {
+uint16_t LSL_ADC_ReadSingleRange(LSL_ADC_Handler* ADC_Handler, uint16_t min, uint16_t max) {
 	if (max) {
 		if((min < 0xffe) && (max < 0xfff)) {
-			return (min + (LSL_ADC_ReadSingle(ADC) / (4092 / (max - min))));
+			return (min + (LSL_ADC_ReadSingle(ADC_Handler->adc) / (4092 / (max - min))));
 		}
 	}
 	return 0;

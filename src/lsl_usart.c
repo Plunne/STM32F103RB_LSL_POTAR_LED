@@ -1,30 +1,50 @@
 #include "lsl_usart.h"
 
+
 /* Init */
 void LSL_USART_Init(LSL_USART_Handler* USART_Handler) {
 
-	//LSL_USART_Setup(USART_Handler->usart, );
-}
-
-void LSL_USART_Setup(USART_TypeDef* USART, uint32_t baudrate, uint8_t data_size, uint8_t parity, uint8_t stop) {
-
 	/* Enable USART Clock */
-	if (USART == USART1) RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 		// Enable clock USART1
-	else if (USART == USART2) RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enable clock USART2
-	else if (USART == USART3) RCC->APB1ENR |= RCC_APB1ENR_USART3EN; // Enable clock USART3
+	if (USART_Handler->usart == USART1) RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 		// Enable clock USART1
+	else if (USART_Handler->usart == USART2) RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enable clock USART2
+	else if (USART_Handler->usart == USART3) RCC->APB1ENR |= RCC_APB1ENR_USART3EN; // Enable clock USART3
 
 	/* Setup USART */
-	LSL_USART_Baudrate(USART, baudrate);
-	LSL_USART_DataSize(USART, data_size);
-	LSL_USART_Parity(USART, data_size, parity);
-	LSL_USART_Stop(USART, stop);
+	LSL_USART_Baudrate(USART_Handler->usart, USART_Handler->bauds);
+	LSL_USART_DataSize(USART_Handler->usart, USART_Handler->dataSize);
+	LSL_USART_Parity(USART_Handler->usart, USART_Handler->dataSize, USART_Handler->parity);
+	LSL_USART_Stop(USART_Handler->usart, USART_Handler->stop);
 
-	USART->CR1 |= USART_CR1_TE | USART_CR1_RE; 	// Enable Tx & Rx (TODO : Auto GPIO enabling)
+	USART_Handler->usart->CR1 |= USART_CR1_TE | USART_CR1_RE; 	// Enable Tx & Rx (TODO : Auto GPIO enabling)
 
 }
 
 /* Baudrate */
 void LSL_USART_Baudrate(USART_TypeDef* USART, uint32_t baudrate) {
+
+	// Table used for USART1
+	// MCU freq = 72MHz
+	// LSL_USART72_BAUD[x][0] = <MCU freq> / (<Baudrate> * 16)
+	// LSL_USART72_BAUD[x][1] = [decimals of "<MCU freq> / (<Baudrate> * 16)"] * 16
+	uint16_t LSL_USART72_BAUD [5][2] = {
+		{1875, 0},  // 2400 Bauds
+		{468, 12},  // 9600 Bauds
+		{234, 6},   // 19200 Bauds
+		{78, 2},    // 57600 Bauds
+		{39, 1}     // 115200 Bauds
+	};
+
+	// Table used for USART2 & USART3
+	// MCU freq = 36MHz
+	// LSL_USART36_BAUD[x][0] = <MCU freq> / (<Baudrate> * 16)
+	// LSL_USART36_BAUD[x][1] = [decimals of "<MCU freq> / (<Baudrate> * 16)"] * 16
+	uint16_t LSL_USART36_BAUD [5][2] = {
+		{937, 8},   // 2400 Bauds
+		{234, 6},   // 9600 Bauds
+		{117, 3},   // 19200 Bauds
+		{39, 1},    // 57600 Bauds
+		{19, 8}     // 115200 Bauds
+	};
 
 	if (USART == USART1) LSL_USART_SetBaudrate(USART, *LSL_USART72_BAUD, baudrate);
 	else if (USART == USART2) LSL_USART_SetBaudrate(USART, *LSL_USART36_BAUD, baudrate);
@@ -110,15 +130,15 @@ void LSL_USART_Stop(USART_TypeDef* USART, uint8_t stop) {
 }
 
 /* Transmit */
-void LSL_USART_Tx(USART_TypeDef* USART, uint8_t data) {
+void LSL_USART_Tx(LSL_USART_Handler* USART_Handler, uint8_t data) {
 
-    USART->DR = data;
-    while (!(USART->SR & USART_SR_TC));
+    USART_Handler->usart->DR = data;
+    while (!(USART_Handler->usart->SR & USART_SR_TC));
 }
 
 /* Receive */
-uint8_t LSL_USART_Rx(USART_TypeDef* USART) {
+uint8_t LSL_USART_Rx(LSL_USART_Handler* USART_Handler) {
 
-    while (!(USART->SR & USART_SR_RXNE));
-    return USART->DR & 0xFF;
+    while (!(USART_Handler->usart->SR & USART_SR_RXNE));
+    return USART_Handler->usart->DR & 0xFF;
 }

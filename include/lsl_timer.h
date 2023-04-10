@@ -3,7 +3,14 @@
 
 #include "lsl_clock.h"
 
+typedef struct {
+    TIM_TypeDef* timer;
+    uint16_t prescaler;
+    uint16_t counter;
+    IRQn_Type event;
+} LSL_TIMER_Handler;
+
 /* Enable */
-void LSL_TIMER_Init(TIM_TypeDef* TIMER, uint16_t tim_pre, uint16_t tim_cpt, IRQn_Type tim_irq);
+void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler);
 
 #endif // LSL_IO_H

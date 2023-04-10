@@ -11,12 +11,19 @@ void LSL_Init_RCC(void);
 void LSL_Init_GPIO(void);
 void LSL_Init_ADC(void);
 void LSL_Init_DIGITAL(void);
+void LSL_Init_USART(void);
 void LSL_Init_TIMERS(void);
 
 /* Digital Handler */
-LSL_Pinout *LSL_IO_Digital[QTY_DIGITAL_PINOUTS];
+LSL_Pinout *LSL_INIT_Digital[QTY_DIGITAL_PINOUTS];
 
 /* Analog Handler */
-LSL_ADC_Handler LSL_IO_Adc;
+LSL_ADC_Handler LSL_INIT_ADC1;
+
+/* USART Handler */
+LSL_USART_Handler LSL_INIT_USART1;
+
+/* Timer Handler */
+LSL_TIMER_Handler LSL_INIT_TIMER2;
 
 #endif // LSL_INIT_H
