@@ -13,4 +13,4 @@ typedef struct {
 /* Enable */
 void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler);
 
-#endif // LSL_IO_H
+#endif // LSL_TIMER_H

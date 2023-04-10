@@ -1,7 +1,7 @@
 #ifndef LSL_PINOUTS_H
 #define LSL_PINOUTS_H
 
-#include "stm32f103xb.h"
+#include "lsl_board.h"
 
 #define INPUT_MODE      0x8
 #define OUTPUT_MODE     0x1

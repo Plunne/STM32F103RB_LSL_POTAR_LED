@@ -1,7 +1,7 @@
 #ifndef LSL_CLOCK_H
 #define LSL_CLOCK_H
 
-#include "stm32f103xb.h"
+#include "lsl_board.h"
 
 /* Define PLL settings */
 #define PLL_x4      0b0010
@@ -35,4 +35,4 @@ void LSL_CLOCK_Select(uint8_t clock);
 /* Prescaling */
 void LSL_CLOCK_PrescaleAPB(uint8_t apb_clk, uint8_t prescale);
 
-#endif // LSL_IO_H
+#endif // LSL_CLOCK_H
