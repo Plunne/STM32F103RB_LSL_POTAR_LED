@@ -21,8 +21,8 @@ void LSL_CLOCK_EnablePLL(void) {
 /* PLL Config */
 void LSL_CLOCK_InitPLL(uint8_t multiplier) {
 
-    LSL_CLOCK_EnablePLL();
     LSL_CLOCK_MultiplierPLL(multiplier);
+    LSL_CLOCK_EnablePLL();
     LSL_CLOCK_Select(RCC_CFGR_SW_PLL);
 }
 
@@ -37,9 +37,9 @@ void LSL_CLOCK_Select(uint8_t clock) {
 
     //Mettre PLL comme clock source /SW
 	RCC->CFGR &= ~RCC_CFGR_SW_Msk;
-	RCC->CFGR |= clock;
+	RCC->CFGR |= (clock << RCC_CFGR_SW_Pos);
 	//Attendre le changement de clock source /SWS
-	while(!(RCC->CFGR & (clock << 2))){};
+	while (!(RCC->CFGR & (clock << 2)));
 }
 
 /* Prescaling */

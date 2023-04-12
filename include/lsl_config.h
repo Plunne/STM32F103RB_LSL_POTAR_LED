@@ -1,6 +1,7 @@
 #ifndef LSL_CONFIG_H
 #define LSL_CONFIG_H
 
+#include "lsl_utils.h"
 #include "lsl_adc.h"
 #include "lsl_digital.h"
 #include "lsl_timer.h"

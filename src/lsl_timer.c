@@ -9,10 +9,10 @@ void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler) {
     else if (TIMER_Handler->timer == TIM4) RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 
     //Choisir le prescaler 
-	TIMER_Handler->timer->PSC = TIMER_Handler->prescaler; // diviser la frequence source par tim_pre + 1
+	TIMER_Handler->timer->PSC = TIMER_Handler->prescaler - 1; // diviser la frequence source par tim_pre + 1
 
 	//Choisir la valeur du conteur 
-	TIMER_Handler->timer->ARR = TIMER_Handler->counter; // interruption tous les tim_cpt + 1
+	TIMER_Handler->timer->ARR = TIMER_Handler->counter - 1; // interruption tous les tim_cpt + 1
 
 	// mise a jour des valeurs psc, arr
 	TIMER_Handler->timer->EGR |= TIM_EGR_UG;
