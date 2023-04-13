@@ -14,14 +14,11 @@ void LSL_Init_DIGITAL(void);
 void LSL_Init_USART(void);
 void LSL_Init_TIMERS(void);
 
-/* Digital Handler */
-LSL_Pinout *LSL_INIT_Digital[QTY_DIGITAL_PINOUTS];
-
 /* Analog Handler */
 LSL_ADC_Handler LSL_INIT_ADC1;
 
 /* USART Handler */
-LSL_USART_Handler LSL_INIT_USART1;
+LSL_USART_Handler LSL_INIT_USART2;
 
 /* Timer Handler */
 LSL_TIMER_Handler LSL_INIT_TIMER2;

@@ -13,11 +13,12 @@ LSL_Pinout POTAR;               // POTAR
 // LSL_Pinout POTAR2;
 
 /* Digital */
-LSL_Pinout LED;                  // LED
-LSL_Pinout Display[DIODE_NB];    // DISPLAY
+LSL_Pinout LED;                 // LED
+LSL_Pinout Display[DIODE_NB];   // DISPLAY
 
-/* Digital Quantity */
-#define QTY_DIGITAL_PINOUTS     DIODE_NB + 1
+/* USART */
+LSL_Pinout USART2_TX;           // USART2 TX (PA2)
+LSL_Pinout USART2_RX;           // USART2 RX (PA3)
 
 /* Config Features */
 void LSL_CONFIG_Init(void);

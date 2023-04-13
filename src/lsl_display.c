@@ -20,14 +20,14 @@ uint8_t LSL_DISPLAY_Get7Seg(uint8_t number) {
     }
 }
 
-void LSL_DISPLAY_Display7Seg(LSL_Pinout *diode, uint8_t number, enum DiodeCOM common) {
+void LSL_DISPLAY_Display7Seg(LSL_Pinout *diode, uint8_t number, LSL_DISPLAY_DiodeCOM common) {
 
     if (common == anode) LSL_DISPLAY_Display7SegAnodeCathode(diode, number, HIGH, LOW);         // If display has Common Anode
     else if (common == cathode) LSL_DISPLAY_Display7SegAnodeCathode(diode, number, LOW, HIGH);  // If display has Common Cathode
 
 }
 
-void LSL_DISPLAY_Display7SegAnodeCathode(LSL_Pinout *diode, uint8_t number, enum DIGITAL_STATE stateA, enum DIGITAL_STATE stateB) {
+void LSL_DISPLAY_Display7SegAnodeCathode(LSL_Pinout *diode, uint8_t number, LSL_DIGITAL_State stateA, LSL_DIGITAL_State  stateB) {
 
     uint8_t segment = LSL_DISPLAY_Get7Seg(number); // Translate number to bits pattern
 

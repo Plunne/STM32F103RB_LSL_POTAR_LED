@@ -1,7 +1,7 @@
 #include "lsl_init.h"
 
 /* Globals */
-int counter = 0;
+static int counter = 0;
 
 /* Interrupts */
 void TIM2_IRQHandler(void);
@@ -14,10 +14,14 @@ int main(void) {
 
 	/* Init Variables */
 	uint16_t adc_value = 0;
+	uint8_t letter = 'L';
 
 	/* Super Loop */
 	while (1) {
 
+		LSL_DISPLAY_Display7Seg(Display, counter, anode);
+		LSL_USART_Tx(&LSL_INIT_USART2, letter);
+		LSL_UTILS_DelayMs(2000);
 		/*
 		adc_value = LSL_ADC_ReadSingleRange(&LSL_INIT_ADC1, 2, 7); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
 		
@@ -40,11 +44,14 @@ int main(void) {
  *     Interrupts     *
  **********************/
 
-void TIM2_IRQHandler(void){
-
-	/* Interrupt instruction */
-	LSL_DIGITAL_Write(&LED, TOGGLE);		
+void TIM2_IRQHandler(void) {
 	
-	/* Reset IRQ flag */
-	TIM2->SR &= ~TIM_SR_UIF;
+	if (TIM2->SR & TIM_SR_UIF) {
+		
+		/* Interrupt instruction */
+		counter = (1 + counter) % 10;
+		
+		/* Reset IRQ flag */
+		TIM2->SR &= ~TIM_SR_UIF;
+	}
 }

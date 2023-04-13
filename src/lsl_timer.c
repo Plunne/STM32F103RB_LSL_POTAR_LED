@@ -1,5 +1,6 @@
 #include "lsl_timer.h"
 
+/* Init */
 void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler) {
 
     /* Enable Timer RCC */
@@ -8,21 +9,28 @@ void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler) {
     else if (TIMER_Handler->timer == TIM3) RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
     else if (TIMER_Handler->timer == TIM4) RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 
-    //Choisir le prescaler 
-	TIMER_Handler->timer->PSC = TIMER_Handler->prescaler - 1; // diviser la frequence source par tim_pre + 1
+    /* Timer prescaling division */
+	TIMER_Handler->timer->PSC = TIMER_Handler->prescaler - 1; 	// divide clock source frequency by TIMER_Handler->prescaler
 
-	//Choisir la valeur du conteur 
-	TIMER_Handler->timer->ARR = TIMER_Handler->counter - 1; // interruption tous les tim_cpt + 1
+	/* Timer max count value */
+	TIMER_Handler->timer->ARR = TIMER_Handler->counter - 1; 	// interrupt every TIMER_Handler->counter
 
-	// mise a jour des valeurs psc, arr
+	/* Update prescaler and counter limit */
 	TIMER_Handler->timer->EGR |= TIM_EGR_UG;
 	
-	// Activer les interruptions -> flags UIE
+	/* Enable Interrupts */
 	TIMER_Handler->timer->DIER |= TIM_DIER_UIE;
 
-    // Enable interrupt tim_irq
+    /* Enable interrupt TIMER_Handler->event */
 	NVIC_EnableIRQ(TIMER_Handler->event);
 	
-	//start le timer
+	/* Start Timer */
 	TIMER_Handler->timer->CR1 |= TIM_CR1_CEN;
+}
+
+/* Update */
+void LSL_TIMER_Update(LSL_TIMER_Handler* TIMER_Handler, uint32_t count) {
+
+	TIMER_Handler->counter = count; 						// Interrupt every TIMER_Handler->counter
+	TIMER_Handler->timer->ARR = TIMER_Handler->counter - 1; // Interrupt every TIMER_Handler->counter
 }

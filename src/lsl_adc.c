@@ -165,7 +165,7 @@ uint16_t LSL_ADC_ReadSingle(LSL_ADC_Handler* ADC_Handler) {
 }
 
 uint16_t LSL_ADC_ReadSingleMax(LSL_ADC_Handler* ADC_Handler, uint8_t max) {
-	if (max) return (LSL_ADC_ReadSingle(ADC_Handler->adc) / (4092 / max));
+	if (max) return (LSL_ADC_ReadSingle(ADC_Handler) / (4092 / max));
 	return 0;
 }
 
@@ -173,7 +173,7 @@ uint16_t LSL_ADC_ReadSingleMax(LSL_ADC_Handler* ADC_Handler, uint8_t max) {
 uint16_t LSL_ADC_ReadSingleRange(LSL_ADC_Handler* ADC_Handler, uint16_t min, uint16_t max) {
 	if (max) {
 		if((min < 0xffe) && (max < 0xfff)) {
-			return (min + (LSL_ADC_ReadSingle(ADC_Handler->adc) / (4092 / (max - min))));
+			return (min + (LSL_ADC_ReadSingle(ADC_Handler) / (4092 / (max - min))));
 		}
 	}
 	return 0;

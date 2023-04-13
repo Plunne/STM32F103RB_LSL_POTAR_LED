@@ -5,6 +5,7 @@
 void LSL_USART_Init(LSL_USART_Handler* USART_Handler) {
 
 	/* Enable USART Clock */
+	RCC->APB2ENR |= RCC_APB2ENR_AFIOEN; 		// Enable clock USART1
 	if (USART_Handler->usart == USART1) RCC->APB2ENR |= RCC_APB2ENR_USART1EN; 		// Enable clock USART1
 	else if (USART_Handler->usart == USART2) RCC->APB1ENR |= RCC_APB1ENR_USART2EN; // Enable clock USART2
 	else if (USART_Handler->usart == USART3) RCC->APB1ENR |= RCC_APB1ENR_USART3EN; // Enable clock USART3
@@ -12,10 +13,34 @@ void LSL_USART_Init(LSL_USART_Handler* USART_Handler) {
 	/* Setup USART */
 	LSL_USART_Baudrate(USART_Handler->usart, USART_Handler->bauds);
 	LSL_USART_DataSize(USART_Handler->usart, USART_Handler->dataSize);
-	LSL_USART_Parity(USART_Handler->usart, USART_Handler->dataSize, USART_Handler->parity);
+	LSL_USART_Parity(USART_Handler->usart, USART_Handler->parity);
 	LSL_USART_Stop(USART_Handler->usart, USART_Handler->stop);
+	LSL_USART_Enable(USART_Handler->usart, USART_Handler->direction);
 
-	USART_Handler->usart->CR1 |= USART_CR1_TE | USART_CR1_RE; 	// Enable Tx & Rx (TODO : Auto GPIO enabling)
+}
+
+/* Enable */
+void LSL_USART_Enable(USART_TypeDef* USART, LSL_USART_Direction direction) {
+
+	USART->CR1 |= USART_CR1_UE;	// Enable USART
+	
+	USART->CR1 &= ~(USART_CR1_TE | USART_CR1_RE); 	// Clear Tx & Rx modes
+	
+	switch (direction)
+	{
+	case Tx:
+		USART->CR1 |= USART_CR1_TE; // Enable Tx
+		break;
+	case Rx:
+		USART->CR1 |= USART_CR1_RE; // Enable Rx
+		break;
+	case Tx_Rx:
+		USART->CR1 |= USART_CR1_TE | USART_CR1_RE; 	// Enable Tx & Rx (TODO : Auto GPIO enabling)
+		break;
+	
+	default:
+		break;
+	}
 
 }
 
@@ -73,15 +98,13 @@ void LSL_USART_SetBaudrate(USART_TypeDef* USART, uint16_t *baudTable, uint32_t b
 /* Data Size */
 void LSL_USART_DataSize(USART_TypeDef* USART, uint8_t data_size) {
 
-	USART->CR1 |= USART_CR1_UE;	// Enable USART
-	
 	switch (data_size)
 	{
 	case 7:
+	case 8:
 		USART->CR1 &= ~USART_CR1_M;	// Disable 9 bits mode (Parity on 8th bit)
 		break;
 
-	case 8:
 	case 9:
 		USART->CR1 |= USART_CR1_M;	// Enable 9 bits mode (Parity on 9th bit or shall be disabled for 9 bits data)
 		break;
@@ -92,23 +115,21 @@ void LSL_USART_DataSize(USART_TypeDef* USART, uint8_t data_size) {
 }
 
 /* Parity */
-void LSL_USART_Parity(USART_TypeDef* USART, uint8_t data_size, uint8_t parity) {
+void LSL_USART_Parity(USART_TypeDef* USART, uint8_t parity) {
 
-	LSL_USART_EnableParity(USART, data_size);
-	LSL_USART_SetParity(USART, parity);
-}
-
-void LSL_USART_EnableParity(USART_TypeDef* USART, uint8_t data_size) {
-
-	switch (data_size)
+	switch (parity)
 	{
-	case 7:
-	case 8:
+	case 0:
+		USART->CR1 &= ~USART_CR1_PCE;	// Parity Control Disable (USART_CR1_PCE = 0)
+		break;
+	case 1:
 		USART->CR1 |= USART_CR1_PCE;	// Parity Control Enable (USART_CR1_PCE = 1)
+		USART->CR1 &= ~USART_CR1_PS;	// Parity Selection Even (USART_CR1_PS = 0)
 		break;
 	
-	case 9:								// Parity shall be disabled for 9 bits mode
-		USART->CR1 &= ~USART_CR1_PCE;	// Parity Control Disable (USART_CR1_PCE = 0)
+	case 2:
+		USART->CR1 |= USART_CR1_PCE;	// Parity Control Enable (USART_CR1_PCE = 1)
+		USART->CR1 |= USART_CR1_PS;		// Parity Selection Odd (USART_CR1_PS = 1)
 		break;
 
 	default:
@@ -116,23 +137,21 @@ void LSL_USART_EnableParity(USART_TypeDef* USART, uint8_t data_size) {
 	}
 }
 
-void LSL_USART_SetParity(USART_TypeDef* USART, uint8_t parity) {
-
-	if (parity == 1) USART->CR1 |= USART_CR1_PS;		// Parity Selection Even (USART_CR1_PS = 0)
-	else if (parity == 0) USART->CR1 &= ~USART_CR1_PS;	// Parity Selection Odd (USART_CR1_PS = 1)
-}
-
 /* Stop */
 void LSL_USART_Stop(USART_TypeDef* USART, uint8_t stop) {
 
+	/* Clear stop bit(s) register */
+	USART->CR2 &= ~USART_CR2_STOP;
+
+	/* Set stop bit(s) */
 	if (stop == 1) USART->CR2 &= ~USART_CR2_STOP; 			// 1 Stop (USART_CR2_STOP = 0b00)
-	else if (stop == 2) USART->CR2 &= ~USART_CR2_STOP_1;	// 2 Stop (USART_CR2_STOP = 0b10)
+	else if (stop == 2) USART->CR2 |= USART_CR2_STOP_1;		// 2 Stop (USART_CR2_STOP = 0b10)
 }
 
 /* Transmit */
 void LSL_USART_Tx(LSL_USART_Handler* USART_Handler, uint8_t data) {
 
-    USART_Handler->usart->DR = data;
+	USART_Handler->usart->DR = data;
     while (!(USART_Handler->usart->SR & USART_SR_TC));
 }
 

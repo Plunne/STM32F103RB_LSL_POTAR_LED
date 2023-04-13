@@ -6,6 +6,8 @@
 #define INPUT_MODE      0x8
 #define OUTPUT_MODE     0x1
 #define ADC_MODE        0x0
+#define USART_TX        0xA
+#define USART_RX        0x4
 
 typedef struct {
     GPIO_TypeDef *PORTx;

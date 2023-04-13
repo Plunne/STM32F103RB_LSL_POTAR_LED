@@ -1,20 +1,12 @@
 #include "lsl_digital.h"
 
-/* Init */
-void LSL_DIGITAL_Init(LSL_Pinout **pinout, uint8_t qty) {
-
-    for (uint8_t i=0; i < qty ; i++) { // For each Pinout from the array
-        LSL_PINOUTS_InitPinout(pinout[i]); // Set GPIO RCC & Mode
-    }
-}
-
 /* Input */
 uint8_t LSL_DIGITAL_Read(LSL_Pinout *pinout) {
     return (pinout->PORTx->IDR & (1 << pinout->pin));   // Read a digital input
 }
 
 /* Output */
-void LSL_DIGITAL_Write(LSL_Pinout *pinout, enum DIGITAL_STATE mode) {
+void LSL_DIGITAL_Write(LSL_Pinout *pinout, LSL_DIGITAL_State mode) {
     
     switch (mode)
     {

@@ -10,7 +10,10 @@ typedef struct {
     IRQn_Type event;
 } LSL_TIMER_Handler;
 
-/* Enable */
+/* Init */
 void LSL_TIMER_Init(LSL_TIMER_Handler* TIMER_Handler);
+
+/* Update */
+void LSL_TIMER_Update(LSL_TIMER_Handler* TIMER_Handler, uint32_t count);
 
 #endif // LSL_TIMER_H
