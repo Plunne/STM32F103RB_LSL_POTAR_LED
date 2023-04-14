@@ -10,6 +10,7 @@
 #define PLL_x7      0b0101
 #define PLL_x8      0b0110
 #define PLL_x9      0b0111
+#define PLL_x16     0b1111
 
 /* Define APB settings */
 #define APB1_CLK    8

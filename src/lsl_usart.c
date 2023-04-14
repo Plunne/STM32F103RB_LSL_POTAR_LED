@@ -92,6 +92,7 @@ void LSL_USART_SetBaudrate(USART_TypeDef* USART, uint16_t *baudTable, uint32_t b
 	}
 
     USART->BRR |= (baudTable[i*2] << 4) | (baudTable[i*2+1] << 0); // Set Bauds Rate Register DIV_Mantissa and DIV_fraction
+    // USART->BRR |= ; // Set Bauds Rate Register DIV_Mantissa and DIV_fraction
 
 }
 
@@ -151,7 +152,7 @@ void LSL_USART_Stop(USART_TypeDef* USART, uint8_t stop) {
 /* Transmit */
 void LSL_USART_Tx(LSL_USART_Handler* USART_Handler, uint8_t data) {
 
-	USART_Handler->usart->DR = data;
+	USART_Handler->usart->DR = (uint8_t) (data & 0xFF);
     while (!(USART_Handler->usart->SR & USART_SR_TC));
 }
 

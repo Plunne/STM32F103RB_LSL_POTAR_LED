@@ -20,7 +20,11 @@ int main(void) {
 	while (1) {
 
 		LSL_DISPLAY_Display7Seg(Display, counter, anode);
-		LSL_USART_Tx(&LSL_INIT_USART2, letter);
+		LSL_USART_Tx(&LSL_INIT_USART2, 'L');
+		LSL_USART_Tx(&LSL_INIT_USART2, 'E');
+		LSL_USART_Tx(&LSL_INIT_USART2, 'N');
+		LSL_USART_Tx(&LSL_INIT_USART2, 'A');
+		LSL_USART_Tx(&LSL_INIT_USART2, '\n');
 		LSL_UTILS_DelayMs(2000);
 		/*
 		adc_value = LSL_ADC_ReadSingleRange(&LSL_INIT_ADC1, 2, 7); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)

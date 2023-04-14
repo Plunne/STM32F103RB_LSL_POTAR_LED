@@ -11,9 +11,9 @@ void LSL_Init_Registers(void) {
 void LSL_Init_RCC(void) {
 
 	/* RCC Setup */
-	// LSL_CLOCK_EnableHSI();
-	// LSL_CLOCK_InitPLL(PLL_x9);					// PLL Multiplier x9
-    // LSL_CLOCK_PrescaleAPB(APB1_CLK, APB_DIV2); 	// APB1 Prescale /2
+	LSL_CLOCK_EnableHSI();
+	LSL_CLOCK_InitPLL(PLL_x9);					// PLL Multiplier x9
+   	//LSL_CLOCK_PrescaleAPB(APB1_CLK, APB_DIV2); 	// APB1 Prescale /2
 
 }
 
@@ -62,6 +62,6 @@ void LSL_Init_TIMERS(void) {
 	LSL_INIT_TIMER2.event = TIM2_IRQn;
 
 	/* Timers Init */
-	// LSL_TIMER_Init(&LSL_INIT_TIMER2);
+	LSL_TIMER_Init(&LSL_INIT_TIMER2);
 
 }
