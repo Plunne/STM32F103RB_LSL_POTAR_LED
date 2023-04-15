@@ -10,7 +10,7 @@
 
 /* Analog */
 LSL_Pinout POTAR;               // POTAR
-// LSL_Pinout POTAR2;
+LSL_Pinout POTAR2;
 
 /* Digital */
 LSL_Pinout LED;                 // LED

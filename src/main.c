@@ -14,31 +14,22 @@ int main(void) {
 
 	/* Init Variables */
 	uint16_t adc_value = 0;
-	uint8_t letter = 'L';
 
 	/* Super Loop */
 	while (1) {
 
-		LSL_DISPLAY_Display7Seg(Display, counter, anode);
-		LSL_USART_Tx(&LSL_INIT_USART2, 'L');
-		LSL_USART_Tx(&LSL_INIT_USART2, 'E');
-		LSL_USART_Tx(&LSL_INIT_USART2, 'N');
-		LSL_USART_Tx(&LSL_INIT_USART2, 'A');
-		LSL_USART_Tx(&LSL_INIT_USART2, '\n');
-		LSL_UTILS_DelayMs(2000);
-		/*
-		adc_value = LSL_ADC_ReadSingleRange(&LSL_INIT_ADC1, 2, 7); // Get ADC Data without MSB Bits 12 -> 15 (because it's a 12bits ADC not 16)
-		
-		// Delay
-		LSL_DISPLAY_Display7Seg(Display, adc_value, anode);
-		LSL_DIGITAL_Write(&LED, TOGGLE);
-		LSL_UTILS_DelayMs(adc_value); 					// Delay (Be careful sw_cpt value depends of this delay)
-		*/
+		LSL_DIGITAL_Write(&LED, HIGH);		
+		LSL_UTILS_DelayMs(LSL_ADC_Read(&LSL_INIT_ADC1, &POTAR));
+		LSL_DIGITAL_Write(&LED, LOW);		
+		LSL_UTILS_DelayMs(LSL_ADC_Read(&LSL_INIT_ADC1, &POTAR2));
 
-		// LSL_DIGITAL_Write(&LED, TOGGLE);		
-		// LSL_UTILS_DelayMs(LSL_ANALOG_ADC_Read(&ANALOG_ADC_Handler, &POTAR));
-		// LSL_DIGITAL_Write(&LED, LOW);		
-		// LSL_UTILS_DelayMs(LSL_ANALOG_ADC_Read(&ANALOG_ADC_Handler, &POTAR2));
+		// LSL_DISPLAY_Display7Seg(Display, counter, anode);
+		// LSL_USART_Tx(&LSL_INIT_USART2, 'L');
+		// LSL_USART_Tx(&LSL_INIT_USART2, 'E');
+		// LSL_USART_Tx(&LSL_INIT_USART2, 'N');
+		// LSL_USART_Tx(&LSL_INIT_USART2, 'A');
+		// LSL_USART_Tx(&LSL_INIT_USART2, '\n');
+		// LSL_UTILS_DelayMs(2000);
 	}
 	
 	return 0;

@@ -11,9 +11,8 @@ void LSL_Init_Registers(void) {
 void LSL_Init_RCC(void) {
 
 	/* RCC Setup */
-	LSL_CLOCK_EnableHSI();
-	LSL_CLOCK_InitPLL(PLL_x9);					// PLL Multiplier x9
-   	//LSL_CLOCK_PrescaleAPB(APB1_CLK, APB_DIV2); 	// APB1 Prescale /2
+	LSL_CLOCK_EnableHSI();		// Enable High Speed Internal clock
+	LSL_CLOCK_InitPLL(PLL_x9);	// PLL Multiplier x9
 
 }
 
@@ -30,11 +29,12 @@ void LSL_Init_ADC(void) {
 
 	/* ADC Handler */
     LSL_INIT_ADC1.adc              = ADC1;
-    LSL_INIT_ADC1.nbChannels       = 1;
+    LSL_INIT_ADC1.nbChannels       = 2;
     LSL_INIT_ADC1.adc_pinout[0]    = &POTAR;
+    LSL_INIT_ADC1.adc_pinout[1]    = &POTAR2;
 
 	/* ADC Init */
-	LSL_ADC_InitSingle(&LSL_INIT_ADC1);
+	LSL_ADC_Init(&LSL_INIT_ADC1);
 
 }
 
