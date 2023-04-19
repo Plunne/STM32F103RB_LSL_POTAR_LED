@@ -5,6 +5,7 @@ static int counter = 0;
 
 /* Interrupts */
 void TIM2_IRQHandler(void);
+void USART2_IRQHandler(void);
 
 /* Main */
 int main(void) {
@@ -14,6 +15,9 @@ int main(void) {
 
 	/* Init Variables */
 	uint16_t adc_value = 0;
+
+	/* User functions */
+	LSL_USART_InteruptRx(&LSL_INIT_USART2);
 
 	/* Super Loop */
 	while (1) {
@@ -48,5 +52,17 @@ void TIM2_IRQHandler(void) {
 		
 		/* Reset IRQ flag */
 		TIM2->SR &= ~TIM_SR_UIF;
+	}
+}
+
+void USART2_IRQHandler(void) {
+
+	if (USART2->SR & USART_SR_RXNE) {
+
+		/* Interrupt instruction */
+		counter = 10;
+
+		/* Reset IRQ flag */
+		USART2->SR &= ~USART_SR_RXNE;
 	}
 }

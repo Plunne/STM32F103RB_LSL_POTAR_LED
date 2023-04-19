@@ -8,6 +8,7 @@
         "lsl_adc.h": "c",
         "lsl_init.h": "c",
         "lsl_timer.h": "c",
-        "lsl_config.h": "c"
+        "lsl_config.h": "c",
+        "lsl_board.h": "c"
     }
 }

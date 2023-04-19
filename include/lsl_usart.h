@@ -13,6 +13,7 @@ typedef struct {
     uint8_t stop;
     LSL_USART_Direction direction;
     LSL_Pinout *usart_pinout[2];
+    IRQn_Type event;
 
 } LSL_USART_Handler;
 
@@ -40,5 +41,8 @@ void LSL_USART_Tx(LSL_USART_Handler* USART_Handler, uint8_t data);
 
 /* Receive */
 uint8_t LSL_USART_Rx(LSL_USART_Handler* USART_Handler);
+
+/* Wait for interrupt */
+void LSL_USART_Rxi(LSL_USART_Handler* USART_Handler);
 
 #endif // LSL_USART_H

@@ -15,6 +15,14 @@ void LSL_USART_Init(LSL_USART_Handler* USART_Handler) {
 	LSL_USART_DataSize(USART_Handler->usart, USART_Handler->dataSize);
 	LSL_USART_Parity(USART_Handler->usart, USART_Handler->parity);
 	LSL_USART_Stop(USART_Handler->usart, USART_Handler->stop);
+	
+	/* Interrupt? */
+	if (USART_Handler->event) {
+		USART_Handler->usart->CR1 |= USART_CR1_RXNEIE;
+		NVIC_EnableIRQ(USART_Handler->event);
+	}
+	
+	/* Enable USART */
 	LSL_USART_Enable(USART_Handler->usart, USART_Handler->direction);
 
 }
@@ -161,4 +169,10 @@ uint8_t LSL_USART_Rx(LSL_USART_Handler* USART_Handler) {
 
     while (!(USART_Handler->usart->SR & USART_SR_RXNE));
     return USART_Handler->usart->DR & 0xFF;
+}
+
+/* Wait for interrupt */
+void LSL_USART_InterruptRx(LSL_USART_Handler* USART_Handler) {
+
+	USART_Handler->usart->SR &= ~USART_SR_RXNE;
 }

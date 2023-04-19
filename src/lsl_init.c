@@ -47,6 +47,7 @@ void LSL_Init_USART(void) {
 	LSL_INIT_USART2.parity 		= 0;
 	LSL_INIT_USART2.stop 		= 1;
 	LSL_INIT_USART2.direction 	= Tx_Rx;
+	LSL_INIT_USART2.event 		= USART2_IRQn;
 
 	/* USART Init */
 	LSL_USART_Init(&LSL_INIT_USART2);
